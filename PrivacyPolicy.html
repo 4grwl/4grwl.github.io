@@ -1,0 +1,124 @@
+<html><head><style>body {
+   color: black;
+}
+</style></head><body><h1 id="privacy-policy-claimvault">Privacy Policy — ClaimVault</h1>
+<p><strong>Last updated:</strong> 1 May 2026</p>
+<p>ClaimVault (&quot;we&quot;, &quot;our&quot;, &quot;the app&quot;) helps you keep track of your purchases, warranties, AMCs, insurance policies, and service schedules. This policy explains what data the app collects, why, and how we handle it.</p>
+<h2 id="1-data-we-collect">1. Data we collect</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>What</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Account info</td>
+<td>Email address, display name (from Google sign-in or magic-link signup)</td>
+<td>Authentication and to associate your data with your account</td>
+</tr>
+<tr>
+<td>Equipment &amp; coverage data</td>
+<td>Item names, brands, model numbers, serial numbers, purchase dates, prices, warranty/AMC/insurance details you enter or upload</td>
+<td>Core app functionality — this is the data the app exists to manage</td>
+</tr>
+<tr>
+<td>Documents</td>
+<td>Receipts, invoices, warranty cards, AMC contracts, photos, PDFs you upload</td>
+<td>Storage and retrieval; OCR/text extraction for auto-fill</td>
+</tr>
+<tr>
+<td>OpenAI API key</td>
+<td>Optional, encrypted at rest, only if you enable the AI Q&amp;A feature</td>
+<td>Used only by your device to call OpenAI on your behalf</td>
+</tr>
+<tr>
+<td>Device info (<code>device_info_plus</code>, <code>package_info_plus</code>)</td>
+<td>Device model, OS version, app version</td>
+<td>Crash diagnostics and support</td>
+</tr>
+<tr>
+<td>Push notification token (<code>firebase_messaging</code>)</td>
+<td>Optional, only if you enable reminders</td>
+<td>Sending coverage-expiry reminders to your device</td>
+</tr>
+</tbody>
+</table>
+<p>We <strong>do not</strong> collect: location, contacts, microphone audio, advertising identifiers, browsing history.</p>
+<h2 id="2-permissions-and-what-they-re-used-for">2. Permissions and what they&#39;re used for</h2>
+<table>
+<thead>
+<tr>
+<th>Android permission</th>
+<th>What we use it for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INTERNET</code></td>
+<td>Sync data with our backend (Supabase) and call OpenAI when you use AI Q&amp;A</td>
+</tr>
+<tr>
+<td><code>CAMERA</code></td>
+<td>Take a photo of a receipt, warranty card, or document for upload</td>
+</tr>
+<tr>
+<td><code>READ_EXTERNAL_STORAGE</code> / <code>READ_MEDIA_IMAGES</code> / <code>READ_MEDIA_VIDEO</code></td>
+<td>Pick existing files (PDFs, CSVs, images) from your device to upload</td>
+</tr>
+<tr>
+<td><code>POST_NOTIFICATIONS</code></td>
+<td>Show coverage-expiry and service-due reminders</td>
+</tr>
+<tr>
+<td><code>WAKE_LOCK</code>, <code>RECEIVE_BOOT_COMPLETED</code>, <code>VIBRATE</code></td>
+<td>Required by the notifications subsystem to deliver scheduled reminders</td>
+</tr>
+</tbody>
+</table>
+<p>The camera, file picker, and notification permissions are only requested when you tap the corresponding feature.</p>
+<h2 id="3-where-data-is-stored">3. Where data is stored</h2>
+<ul>
+<li><strong>Database</strong>: Supabase (PostgreSQL). All rows are protected by row-level security; you can only read and write rows that belong to your <code>user_id</code>.</li>
+<li><strong>File storage</strong>: Supabase Storage, in a private bucket called <code>documents</code>. Files are scoped to your user folder.</li>
+<li><strong>OpenAI key</strong>: Encrypted on-device with a secret derived from your account, then stored on your <code>users</code> row in Supabase. Only the decrypted key is used in-memory at request time.</li>
+<li><strong>Local cache</strong>: Recent records may be cached in app-private storage by Flutter / Supabase SDK. Cache is cleared when you sign out or uninstall the app.</li>
+</ul>
+<h2 id="4-third-party-services">4. Third-party services</h2>
+<ul>
+<li><strong>Supabase</strong> (data, auth, storage) — see <a href="https://supabase.com/privacy">https://supabase.com/privacy</a></li>
+<li><strong>Google Sign-In</strong> (auth provider) — only your email and display name are shared with us, and only when you choose to sign in</li>
+<li><strong>OpenAI</strong> — <em>only</em> if you supply your own API key and use the AI Q&amp;A feature. Your question, equipment metadata, and document text are sent to OpenAI&#39;s chat completion endpoint. Refer to <a href="https://openai.com/policies/privacy-policy">https://openai.com/policies/privacy-policy</a></li>
+<li><strong>Firebase Cloud Messaging</strong> — for push notifications, when enabled</li>
+<li><strong>Google ML Kit (on-device)</strong> — runs OCR locally on your device. <strong>Text never leaves the device</strong> for the OCR step.</li>
+</ul>
+<h2 id="5-data-sharing">5. Data sharing</h2>
+<p>We do not sell, rent, or trade your data. The only times your data leaves the app are:</p>
+<ol>
+<li>To and from Supabase (your own backend account, encrypted in transit via HTTPS)</li>
+<li>To OpenAI, only if you&#39;ve enabled AI Q&amp;A and supplied a key</li>
+<li>To Firebase, for push notifications you&#39;ve opted in to</li>
+</ol>
+<h2 id="6-your-rights">6. Your rights</h2>
+<p>You can:</p>
+<ul>
+<li><strong>Export</strong> all your data via the in-app Settings → Export</li>
+<li><strong>Delete</strong> your account and all associated data via Settings → Delete Account. This removes your <code>users</code> row, all equipment, documents, coverage plans, reminders, and Supabase Storage files via cascade.</li>
+</ul>
+<p>For requests, contact: <strong>claimvault.support@example.com</strong> <em>(replace with your real address before launch)</em></p>
+<h2 id="7-children">7. Children</h2>
+<p>ClaimVault is not directed at children under 13 and we do not knowingly collect their data.</p>
+<h2 id="8-security">8. Security</h2>
+<ul>
+<li>All transport is HTTPS</li>
+<li>Database uses row-level security (RLS) so users can only access their own rows</li>
+<li>The OpenAI API key is encrypted at rest</li>
+<li>Authentication tokens are stored in <code>flutter_secure_storage</code> (Android Keystore-backed)</li>
+</ul>
+<h2 id="9-changes-to-this-policy">9. Changes to this policy</h2>
+<p>We will update the date at the top of this document if the policy changes. Material changes will be announced in-app or via email.</p>
+<h2 id="10-contact">10. Contact</h2>
+<p><strong>Email:</strong> nexteradevelopmentllc@gmail.com</p>
+</body></html>
