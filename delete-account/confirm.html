@@ -98,3 +98,53 @@
         ⚠️ This will permanently delete all your items, documents, coverage plans, reminders, and uploaded files. This cannot be undone.
       </div>
       <div class="error" id="err"></div>
+      <button id="confirm-btn" onclick="confirmDelete()">Yes, Delete My Account</button>
+      <a class="cancel" href="index.html">Cancel</a>
+    </div>
+  </div>
+
+  <script>
+    const EDGE_FN = 'https://rhjflcvjskljkjilccgs.supabase.co/functions/v1/delete-request'
+
+    // Supabase puts session tokens in the URL fragment after the magic link redirect
+    const fragment = new URLSearchParams(location.hash.slice(1))
+    const accessToken = fragment.get('access_token')
+    const tokenType   = fragment.get('type')
+
+    if (!accessToken || tokenType !== 'magiclink') {
+      document.getElementById('confirm-wrap').style.display = 'none'
+      document.getElementById('invalid-wrap').classList.add('visible')
+    } else {
+      // Decode the JWT to show the user's email (no library needed — just parse the payload)
+      try {
+        const payload = JSON.parse(atob(accessToken.split('.')[1]))
+        document.getElementById('email-display').textContent = payload.email ?? ''
+      } catch (_) {}
+    }
+
+    async function confirmDelete() {
+      const btn = document.getElementById('confirm-btn')
+      btn.disabled = true
+      btn.textContent = 'Deleting…'
+
+      const body = new URLSearchParams({ step: 'confirm', access_token: accessToken })
+      const res = await fetch(EDGE_FN, {
+        method: 'POST',
+        body,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        redirect: 'follow',
+      })
+
+      if (res.ok || res.redirected) {
+        window.location.href = 'success.html'
+      } else {
+        const el = document.getElementById('err')
+        el.textContent = 'Something went wrong. Please try again or contact privacy@claimvault.app.'
+        el.classList.add('visible')
+        btn.disabled = false
+        btn.textContent = 'Yes, Delete My Account'
+      }
+    }
+  </script>
+</body>
+</html>

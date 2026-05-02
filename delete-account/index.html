@@ -98,3 +98,92 @@
       color: #c5221f;
       border-radius: 8px;
       padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .error.visible { display: block; }
+    .sent {
+      text-align: center;
+      display: none;
+      padding: 8px 0;
+    }
+    .sent.visible { display: block; }
+    .sent .icon { font-size: 40px; margin-bottom: 12px; }
+    .sent h2 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+    .sent p { font-size: 14px; color: #555; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">ClaimVault</div>
+    <h1>Delete My Account &amp; Data</h1>
+
+    <div class="steps">
+      <p>How it works</p>
+      <div class="step">
+        <div class="step-num">1</div>
+        <span>Enter the email address linked to your ClaimVault account below.</span>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <span>We&rsquo;ll send a secure deletion link to that email address.</span>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <span>Click the link in the email to confirm. Your account and all associated data will be permanently deleted.</span>
+      </div>
+    </div>
+
+    <div class="warning">
+      ⚠️ Deletion is permanent and cannot be undone. All items, documents, coverage plans, reminders, and uploaded files will be removed.
+    </div>
+
+    <div class="error" id="err"></div>
+
+    <div id="form-wrap">
+      <label for="email">Email address</label>
+      <input type="email" id="email" placeholder="you@example.com" required autofocus>
+      <button id="submit-btn" onclick="handleSubmit()">Send Deletion Link</button>
+    </div>
+
+    <div class="sent" id="sent-wrap">
+      <div class="icon">📧</div>
+      <h2>Check your email</h2>
+      <p>If an account exists for that address, a deletion link has been sent. The link expires in 1 hour.<br><br>You can close this page.</p>
+    </div>
+  </div>
+
+  <script>
+    const EDGE_FN = 'https://rhjflcvjskljkjilccgs.supabase.co/functions/v1/delete-request'
+
+    const errorMessages = {
+      invalid_email: 'Please enter a valid email address.',
+      send_failed: 'Something went wrong. Please try again.',
+    }
+    const params = new URLSearchParams(location.search)
+    const errMsg = errorMessages[params.get('error')]
+    if (errMsg) {
+      const el = document.getElementById('err')
+      el.textContent = errMsg
+      el.classList.add('visible')
+    }
+
+    async function handleSubmit() {
+      const email = document.getElementById('email').value.trim()
+      if (!email) return
+
+      const btn = document.getElementById('submit-btn')
+      btn.disabled = true
+      btn.textContent = 'Sending…'
+
+      const body = new URLSearchParams({ step: 'request', email })
+      const res = await fetch(EDGE_FN, { method: 'POST', body, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+
+      // Always show success to avoid leaking whether the email exists
+      document.getElementById('form-wrap').style.display = 'none'
+      document.getElementById('sent-wrap').classList.add('visible')
+    }
+  </script>
+</body>
+</html>
